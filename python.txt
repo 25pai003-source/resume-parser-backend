@@ -1,0 +1,11 @@
+python
+java
+machine learning
+deep learning
+nlp
+sql
+react
+flask
+django
+tensorflow
+pytorch
