@@ -5,23 +5,26 @@ import re
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-# Download required nltk data
+# ----------------------------
+# Download required NLTK data
+# ----------------------------
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 
-# Initialize tools
+# Initialize NLP tools
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
+# ----------------------------
 # Load skills list
+# ----------------------------
 with open("skills.txt", "r") as f:
     SKILLS = [skill.strip().lower() for skill in f.readlines()]
 
-
-# ---------------------------------
+# ----------------------------
 # READ RESUME FILE
-# ---------------------------------
+# ----------------------------
 def read_resume(file_path):
     text = ""
 
@@ -37,17 +40,13 @@ def read_resume(file_path):
 
     return text.lower()
 
-
-# ---------------------------------
+# ----------------------------
 # PREPROCESS TEXT
-# ---------------------------------
+# ----------------------------
 def preprocess(text):
-    # Remove special characters
     text = re.sub(r'[^a-zA-Z ]', ' ', text)
-
     words = text.split()
 
-    # Remove stopwords + lemmatize
     processed_words = [
         lemmatizer.lemmatize(word)
         for word in words
@@ -56,10 +55,9 @@ def preprocess(text):
 
     return processed_words
 
-
-# ---------------------------------
+# ----------------------------
 # EXTRACT SKILLS
-# ---------------------------------
+# ----------------------------
 def extract_skills(words):
     found_skills = set()
 
@@ -69,22 +67,27 @@ def extract_skills(words):
 
     return list(found_skills)
 
+# ----------------------------
+# EXTRACT EXPERIENCE
+# ----------------------------
+def extract_experience(text):
+    """
+    Extract years of experience from resume text
+    Example matches: '2 years experience', '5 yrs experience'
+    """
+    pattern = r'(\d+)\s*(?:\+)?\s*(?:years?|yrs?)\s+experience'
+    matches = re.findall(pattern, text.lower())
 
-# ---------------------------------
-# COMPLETE PIPELINE FUNCTION
-# ---------------------------------
+    if matches:
+        return max(matches) + " years"
+
+    return "Not mentioned"
+
+# ----------------------------
+# COMPLETE PIPELINE
+# ----------------------------
 def parse_resume(file_path):
-
-    # Step 1: Read resume
     text = read_resume(file_path)
-
-    # Step 2: Preprocess text
     processed_words = preprocess(text)
 
-    # Step 3: Extract skills
-    skills = extract_skills(processed_words)
-
-    return {
-        "skills": skills,
-        "text": text
-    }
+    s
