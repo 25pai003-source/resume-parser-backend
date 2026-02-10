@@ -1,0 +1,19 @@
+Name: Aliya
+
+Email: aliya@email.com
+Phone: 9999999999
+
+SKILLS
+Python
+SQL
+Flask
+Machine Learning
+HTML
+CSS
+
+EXPERIENCE
+I have 2 years of experience as a Python developer.
+Worked with Flask and SQL databases.
+
+EDUCATION
+Bachelor of Technology in Computer Science
