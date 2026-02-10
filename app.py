@@ -13,6 +13,14 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 # ------------------------------
+# Home Route (IMPORTANT)
+# ------------------------------
+@app.route("/", methods=["GET"])
+def home():
+    return "Resume Parser Backend is running"
+
+
+# ------------------------------
 # API 1: Upload & Parse Resume
 # ------------------------------
 @app.route("/upload_resume", methods=["POST"])
@@ -21,12 +29,15 @@ def upload_resume():
         return jsonify({"error": "No file uploaded"}), 400
 
     file = request.files["file"]
+
+    if file.filename == "":
+        return jsonify({"error": "Empty filename"}), 400
+
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(file_path)
 
     # Read and parse resume
     text = read_resume(file_path)
-    tokens = preprocess(text)
     skills = extract_skills(text)
     experience = extract_experience(text)
 
@@ -42,12 +53,14 @@ def upload_resume():
 # ---------------------------------
 @app.route("/match", methods=["POST"])
 def match():
-    data = request.json
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No JSON data provided"}), 400
 
     resume_skills = data.get("resume_skills", [])
     job_description = data.get("job_description", "").lower()
 
-    # Extract job skills
     job_skills = []
     from parser import SKILLS
     for skill in SKILLS:
@@ -63,12 +76,7 @@ def match():
 
 
 # ------------------------------
-# Run Server
+# Local run only (Render ignores this)
 # ------------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
-
-
-
-
-
+    app.run(host="0.0.0.0", port=8000)
